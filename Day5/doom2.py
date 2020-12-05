@@ -39,12 +39,12 @@ if __name__ == "__main__":
         seat_id = get_seat_id(row, col)
         seat_list.append(seat_id)
 
-    print('asdf', min_row, max_row)
+    # print('asdf', min_row, max_row)
 
     seat_list.sort()
     # print(seat_list)
     for i in range(len(seat_list) - 1):
         if seat_list[i+1] != seat_list[i] + 1:
-            print(seat_list[i], seat_list[i+1])
+            print("Possible missing seat between", seat_list[i], seat_list[i+1])
 
     # print(max_id)

@@ -34,4 +34,4 @@ if __name__ == "__main__":
         if seat_id > max_id:
             max_id = seat_id
 
-    print(max_id)
+    print("Max ID:", max_id)
