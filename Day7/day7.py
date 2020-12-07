@@ -16,7 +16,7 @@ class Bag:
         self.bags.append((bag, quantity))
 
     def get_bag_count(self):
-        return sum([b.get_bag_count() * n for b, n in self.bags])
+        return sum([(b.get_bag_count() + 1) * n for b, n in self.bags])
 
     def get_bag_type_count(self, colour):
         count = 0
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     bags = {}
 
-    # Build tree
+    # Build tree of bags
     for line in lines:
         if not line:
             continue
@@ -64,18 +64,22 @@ if __name__ == "__main__":
                 child_bag = get_bag(bags, child_colour)
                 bag.add_bag(child_bag, quantity)
 
-    # print(bags)
-
-    # Find number of bags that contain shiny gold bag
+    # Part 1: Find number of bags that contain shiny gold bag
+    my_bag = "shiny gold"
     contains_count = 0
     for colour in bags:
         bag = bags[colour]
 
-        num_shiny_gold = bag.get_bag_type_count("shiny gold")
+        num_shiny_gold = bag.get_bag_type_count(my_bag)
         # if num_shiny_gold:
         #     print(num_shiny_gold)
 
         if num_shiny_gold > 0:
             contains_count += 1
 
+    print(f"Part 1 (number of bags that contain {my_bag} bags):")
     print(contains_count)
+
+    # Part 2: Find number of bags inside my bag
+    print(f"Part 2 (number of bags contained within my {my_bag} bag):")
+    print(bags[my_bag].get_bag_count())
