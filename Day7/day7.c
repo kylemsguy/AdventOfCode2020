@@ -56,7 +56,8 @@ Bag *find_bag(BagList **bags, char *colour){
 int find_str_offset(char *str, char *to_find){
     int index = -1;
     int find_len = strlen(to_find);
-    for(int i = 0; i < strlen(str); i++){
+    int str_len = strlen(str);
+    for(int i = 0; i < str_len; i++){
         if (strncmp(str + i, to_find, find_len) == 0) {
             index = i;
             break;
