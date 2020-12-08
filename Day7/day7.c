@@ -144,5 +144,8 @@ int main(int argc, char **argv){
     int in_bag_count = count_subbags(shiny_gold);
     printf("Number of bags inside your \"shiny gold\" bag: %d\n", in_bag_count);
 
+    // I could properly free everything...
+    // Or I could just let the OS do it for me :)
+
     return EXIT_SUCCESS;
 }
