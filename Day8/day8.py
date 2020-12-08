@@ -1,5 +1,3 @@
-
-
 if __name__ == "__main__":
     with open("input.txt") as infile:
         raw = infile.read()
