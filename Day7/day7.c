@@ -132,6 +132,8 @@ int main(int argc, char **argv){
         }
     }
 
+    fclose(input);
+
     int count = 0;
     for(BagList *node = bags_list; node != NULL; node = node->next){
         if (bag_contains_colour(node->bag, "shiny gold")){
