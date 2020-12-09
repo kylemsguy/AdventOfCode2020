@@ -56,9 +56,8 @@ int main(int argc, char **argv){
     char *lineptr = NULL;
     size_t line_len = 0;
     int i = 0;
-    while(i < TOTAL_NUMS && getline(&lineptr, &line_len, infile) != -1) {
+    while(i++ < TOTAL_NUMS && getline(&lineptr, &line_len, infile) != -1) {
         nums[i] = strtol(lineptr, NULL, 10);
-        i++;
     }
 
     int64_t invalid = find_first_invalid(nums, TOTAL_NUMS);
