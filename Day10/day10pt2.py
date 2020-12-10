@@ -40,5 +40,5 @@ if __name__ == "__main__":
     nums = [int(line.strip()) for line in raw.split('\n') if line.strip()]
     
     # Print the solution
-    print(count_paths(nums))
+    print("Part 2 Solution (Number of possible adapter combinations):", count_paths(nums))
     

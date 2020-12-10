@@ -11,7 +11,7 @@ if __name__ == "__main__":
     one_diff = 1
     three_diff = 1
 
-    print(nums)
+    # print(nums)
 
     for i in range(len(nums)-1):
         j = i + 1
@@ -24,4 +24,4 @@ if __name__ == "__main__":
             print("BAD")
             print(nums[j] - nums[i])
     
-    print(one_diff * three_diff)
+    print("Part One solution:", one_diff * three_diff)
