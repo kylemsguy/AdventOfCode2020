@@ -4,10 +4,10 @@ if __name__ == "__main__":
 
     nums = [int(line.strip()) for line in raw.split('\n') if line.strip()]
 
+    # This step is necessary
     nums.sort()
-    # nums.append(nums[-1] + 3)
 
-    # Both set to 1 because beg = 0 and cpu = max+3
+    # Both initially set to 1 because outlet = 0, first adapter is 1, and cpu = max+3
     one_diff = 1
     three_diff = 1
 
@@ -20,6 +20,7 @@ if __name__ == "__main__":
         elif nums[j] - nums[i] == 3:
             three_diff += 1
         elif nums[j] - nums[i] > 3:
+            # This should not happen unless input is bad
             print("BAD")
             print(nums[j] - nums[i])
     
