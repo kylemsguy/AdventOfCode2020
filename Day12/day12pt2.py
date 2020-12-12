@@ -50,7 +50,6 @@ def move(pos, waypoint, ins):
 
 if __name__ == "__main__":
     filename = "input.txt"
-    # filename = "input_small.txt"
     with open(filename) as infile:
         raw = infile.read()
 
@@ -61,14 +60,12 @@ if __name__ == "__main__":
 
     waypoint = 10, 1
 
-    print(rotate((10, 4), 'R90'))
-    
     for d in directions:
         if d[0] in ["N","S","E","W","F"]:
             pos, waypoint = move(pos, waypoint, d)
         else:
             waypoint = rotate(waypoint, d)
-        print(d, pos, waypoint)
+        # print(d, pos, waypoint)
 
     x, y = pos
     print("Part 2 Manhatten distance:", abs(x) + abs(y))
