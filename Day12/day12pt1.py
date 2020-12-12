@@ -60,4 +60,4 @@ if __name__ == "__main__":
             angle = rotate(angle, d)
         print(d, x, y, angle)
 
-    print(abs(x) + abs(y))
+    print("Part 1 Manhatten distance:", abs(x) + abs(y))

@@ -1,36 +1,6 @@
 import math
 
 
-quadrant_coefficient = {
-    1: (1,1),
-    2: (-1,1),
-    3: (-1,-1),
-    4: (1,-1),
-}
-
-
-# def get_quadrant(pos):
-#     x, y = pos
-#     if x >= 0 and y >= 0:
-#         return 1
-#     elif x < 0 and y >= 0:
-#         return 2
-#     elif x < 0 and y < 0:
-#         return 3
-#     elif x >= 0 and y < 0:
-#         return 4
-
-# def move_to_quadrant(pos, angle):
-#     x, y = pos
-#     quadrant = get_quadrant(pos)
-#     new_quadrant = (quadrant + int(angle / 90) - 1) % 4 + 1
-#     # print(quadrant, new_quadrant)
-
-#     x_c, y_c = quadrant_coefficient[new_quadrant]
-#     return abs(x) * x_c, abs(y) * y_c
-
-
-
 def rotate(pos, ins):
     x, y = pos
     amount = int(ins[1:])
@@ -56,14 +26,6 @@ def rotate(pos, ins):
 
     return round(new_x), round(new_y)
 
-
-# def rotate(pos, ins):
-#     x, y = pos
-#     amount = int(ins[1:])
-#     if ins[0] == 'R':
-#         amount = -1 * amount
-    
-#     return move_to_quadrant(pos, amount)
 
 def move(pos, waypoint, ins):
     x, y = pos
@@ -109,4 +71,4 @@ if __name__ == "__main__":
         print(d, pos, waypoint)
 
     x, y = pos
-    print(abs(x) + abs(y))
+    print("Part 2 Manhatten distance:", abs(x) + abs(y))
