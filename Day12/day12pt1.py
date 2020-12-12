@@ -22,6 +22,8 @@ def rotate(angle, ins):
 
 
 def move(pos, facing, ins):
+    # Note: Part 1 uses screen coords
+    # This means N is -y and S is +y
     x, y = pos
     amount = int(ins[1:])
     direction = ins[0]

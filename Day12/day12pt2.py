@@ -20,6 +20,8 @@ def rotate(pos, ins):
 
 
 def move(pos, waypoint, ins):
+    # Note: for part 2 we are using traditional cartesian coords
+    # This means that 'N' is +y and 'S' is -y
     x, y = pos
     x_w, y_w = waypoint
     amount = int(ins[1:])
