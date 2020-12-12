@@ -9,15 +9,7 @@ def rotate(pos, ins):
     rad = math.radians(amount)
 
     length = math.sqrt(x**2 + y**2)
-    if y == 0:
-        if x > 0:
-            angle = 0
-        elif x < 0:
-            angle = 180
-        else:
-            return x, y
-    else:
-        angle = (y / abs(y)) * math.degrees(math.acos(x / length))
+    angle = math.degrees(math.atan2(y, x))
 
     new_angle = angle + amount
 
