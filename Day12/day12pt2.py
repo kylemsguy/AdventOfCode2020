@@ -8,7 +8,7 @@ def rotate(pos, ins):
         amount = -1 * amount
     rad = math.radians(amount)
 
-    length = math.sqrt(x**2 + y**2)
+    length = math.sqrt(x*x + y*y)
     angle = math.degrees(math.atan2(y, x))
 
     new_angle = angle + amount
