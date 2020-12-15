@@ -4,6 +4,20 @@ import time
 from collections import defaultdict
 
 def memory_game(nums, limit, last_encountered=None, print_interval=0):
+    """Generates the list of numbers after <limit> iterations of Day 14's 
+        number game
+
+    Args:
+        nums (list(int)): Initial list of numbers
+        limit (int): Maximum number of iterations
+        last_encountered (dict(int:int), optional): A cached last_encountered
+            list from a previous run, if any. Defaults to None.
+        print_interval (int, optional): The number of iterations to print 
+            runtime at. If 0, this is disabled. Defaults to 0.
+
+    Returns:
+        [type]: [description]
+    """
     if not last_encountered:
         last_encountered = {num: i for i, num in enumerate(nums[:-1])}
 
