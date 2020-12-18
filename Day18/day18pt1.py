@@ -1,4 +1,4 @@
-import numpy as np
+# The smart way might be to build an AST...
 
 
 def eval_expr(line):
@@ -6,7 +6,8 @@ def eval_expr(line):
     outer_parens = []
     paren_count = 0
     paren_start = None
-    # Find outer parens
+
+    # Find top-level parens
     for i, char in enumerate(line):
         if char == '(':
             paren_count += 1
@@ -18,6 +19,7 @@ def eval_expr(line):
                 outer_parens.append((paren_start, i))
                 paren_start = None
 
+    # Recursively evaluate all top-level parens
     if outer_parens:
         startend_vals = {}
         for start, end in outer_parens:
@@ -41,10 +43,13 @@ def eval_expr(line):
         new_line = ''.join(parts)
         parts = new_line.split(' ')
     else:
+        # If there are no parens, just split normally
         parts = line.split(' ')
 
+    # Evaluate all remaining operations
     i = 1
     prev_val = int(parts[0])
+    # Skip the loop if all we have left is a single value
     while i < len(parts):
         next_val = int(parts[i+1])
         op = parts[i]

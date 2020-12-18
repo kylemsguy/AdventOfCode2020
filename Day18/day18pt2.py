@@ -1,4 +1,4 @@
-import numpy as np
+# The smart way probably would be to build a tree...
 
 
 def eval_expr(line):
@@ -18,6 +18,7 @@ def eval_expr(line):
                 outer_parens.append((paren_start, i))
                 paren_start = None
 
+    # Recursively evaluate all top-level parens
     if outer_parens:
         startend_vals = {}
         for start, end in outer_parens:
@@ -41,8 +42,11 @@ def eval_expr(line):
         new_line = ''.join(parts)
         parts = new_line.split(' ')
     else:
+        # If there are no parens, just split normally
         parts = line.split(' ')
 
+    # Evaluate and consume all '+' ops first, if any
+    # If we just have a single op, skip this step
     if len(parts) > 3:
         new_parts = []
         # eval + first
@@ -67,8 +71,10 @@ def eval_expr(line):
         old_parts = parts
         parts = new_parts
 
+    # Evaluate remaining operations
     i = 1
     prev_val = int(parts[0])
+    # Skip the loop if all we have left is a single value
     while i < len(parts):
         next_val = int(parts[i+1])
         op = parts[i]
