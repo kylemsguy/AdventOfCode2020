@@ -1,6 +1,13 @@
 # A smarter way might have been to build an AST
 # This is what I came up with first.
 
+# The difference between Part 1 and Part 2 was just one
+# pre-processing step, so combining them into one function
+# was pretty easy.
+
+# The preprocessing steps were not broken into separate functions
+# for legibility's sake (no need to scroll up/down to func def)
+
 
 def eval_expr(line, add_first=False):
     """Evaluates an expression via AoC2020Day18 Rules
