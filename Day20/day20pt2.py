@@ -10,7 +10,7 @@ class Tile:
         self.tile_id = tile_id
         self.raw_data = []
         self.data = None
-        self.edge_matches = [None, None, None, None]
+        self.edge_matches_other = [None, None, None, None]
 
     def __repr__(self):
         return f"Tile {self.tile_id}"
@@ -62,12 +62,12 @@ class Tile:
         for i, m in enumerate(m_edges):
             for j, o in enumerate(o_edges):
                 if (m == o).all():
-                    self.edge_matches[i] = self, i
-                    other.edge_matches[j] = other, j
+                    self.edge_matches_other[i] = self, i
+                    other.edge_matches_other[j] = other, j
                     return True
                 if (m == o[::-1]).all():
-                    self.edge_matches[i] = self, i
-                    other.edge_matches[j] = other, -j
+                    self.edge_matches_other[i] = self, i
+                    other.edge_matches_other[j] = other, -j
                     return True
         return False
 
@@ -107,48 +107,88 @@ def check_neighbours(array, rowcol):
     return True
 
 
-def find_solution(unplaced_tiles, array):
+def find_solution(unplaced_tiles, array, corner_tiles):
     rowcol = get_empty_tile(array)
     # print(rowcol)
     if not rowcol:
         return True
     row, col = rowcol
-    for tile in unplaced_tiles:
-        array[row, col] = tile
-        # No flips
-        for i in range(4):
-            is_valid = check_neighbours(array, (row, col))
-            if is_valid:
-                if find_solution(unplaced_tiles - {tile}, array):
-                    return True
-            tile.rotate()
-        # Flip x
-        tile.flip('x')
-        for i in range(4):
-            is_valid = check_neighbours(array, (row, col))
-            if is_valid:
-                if find_solution(unplaced_tiles - {tile}, array):
-                    return True
-            tile.rotate()
-        # Flip x&y
-        tile.flip('y')
-        for i in range(4):
-            is_valid = check_neighbours(array, (row, col))
-            if is_valid:
-                if find_solution(unplaced_tiles - {tile}, array):
-                    return True
-            tile.rotate()
-        # Flip y
-        tile.flip('x')
-        for i in range(4):
-            is_valid = check_neighbours(array, (row, col))
-            if is_valid:
-                if find_solution(unplaced_tiles - {tile}, array):
-                    return True
-            tile.rotate()
-        tile.flip('y')
+    # square array
+    rowsize = array.shape[0]
+    if rowcol in [(0, 0), (0, rowsize-1), (rowsize-1, 0), (rowsize-1, rowsize-1)]:
+        for tile in corner_tiles:
+            array[row, col] = tile
+            # No flips
+            for i in range(4):
+                is_valid = check_neighbours(array, (row, col))
+                if is_valid:
+                    if find_solution(unplaced_tiles, array, corner_tiles - {tile}):
+                        return True
+                tile.rotate()
+            # Flip x
+            tile.flip('x')
+            for i in range(4):
+                is_valid = check_neighbours(array, (row, col))
+                if is_valid:
+                    if find_solution(unplaced_tiles, array, corner_tiles - {tile}):
+                        return True
+                tile.rotate()
+            # Flip x&y
+            tile.flip('y')
+            for i in range(4):
+                is_valid = check_neighbours(array, (row, col))
+                if is_valid:
+                    if find_solution(unplaced_tiles, array, corner_tiles - {tile}):
+                        return True
+                tile.rotate()
+            # Flip y
+            tile.flip('x')
+            for i in range(4):
+                is_valid = check_neighbours(array, (row, col))
+                if is_valid:
+                    if find_solution(unplaced_tiles, array, corner_tiles - {tile}):
+                        return True
+                tile.rotate()
+            tile.flip('y')
 
-        array[row, col] = 0
+            array[row, col] = 0
+    else:
+        for tile in unplaced_tiles:
+            array[row, col] = tile
+            # No flips
+            for i in range(4):
+                is_valid = check_neighbours(array, (row, col))
+                if is_valid:
+                    if find_solution(unplaced_tiles - {tile}, array, corner_tiles):
+                        return True
+                tile.rotate()
+            # Flip x
+            tile.flip('x')
+            for i in range(4):
+                is_valid = check_neighbours(array, (row, col))
+                if is_valid:
+                    if find_solution(unplaced_tiles - {tile}, array, corner_tiles):
+                        return True
+                tile.rotate()
+            # Flip x&y
+            tile.flip('y')
+            for i in range(4):
+                is_valid = check_neighbours(array, (row, col))
+                if is_valid:
+                    if find_solution(unplaced_tiles - {tile}, array, corner_tiles):
+                        return True
+                tile.rotate()
+            # Flip y
+            tile.flip('x')
+            for i in range(4):
+                is_valid = check_neighbours(array, (row, col))
+                if is_valid:
+                    if find_solution(unplaced_tiles - {tile}, array, corner_tiles):
+                        return True
+                tile.rotate()
+            tile.flip('y')
+
+            array[row, col] = 0
 
     print("Backtrack", rowcol)
     return False
@@ -215,6 +255,7 @@ if __name__ == "__main__":
     # Part 2
     unplaced_tiles = set(tiles) - corner_tiles
     array = np.zeros(shape=(dim, dim), dtype=object)
-    solution = find_solutions_with_corners(unplaced_tiles, array, corner_tiles)
+    # solution = find_solutions_with_corners(unplaced_tiles, array, corner_tiles)
+    solution = find_solution(unplaced_tiles, array, corner_tiles)
 
     print(solution)    
