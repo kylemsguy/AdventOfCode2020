@@ -10,13 +10,11 @@ class Tile:
         self.tile_id = tile_id
         self.raw_data = []
         self.data = None
-        self.transformations = []
 
     def __repr__(self):
         return f"Tile {self.tile_id}"
 
     def rotate(self):
-        self.transformations.append("rotateleft")
         # only rotates left
         self.data = np.rot90(self.data)#, times)
 
@@ -25,11 +23,9 @@ class Tile:
 
     def flip(self, axis):
         if axis == 'x':
-            self.transformations.append('flip_x')
             self.data = np.fliplr(self.data)
             return True
         elif axis == 'y':
-            self.transformations.append('flip_y')
             self.data = np.flipud(self.data)
             return True
         else:
@@ -53,11 +49,22 @@ class Tile:
             return (m_edges[1] == o_edges[0]).all()
         elif direction == 'left':
             return (m_edges[2] == o_edges[3]).all()
-        elif direction == 'left':
+        elif direction == 'right':
             return (m_edges[3] == o_edges[2]).all()
 
         raise ValueError(direction1)
 
+    def edge_matches_any_side(self, other):
+        m_edges = self.get_edges()
+        o_edges = other.get_edges()
+
+        for m in m_edges:
+            for o in o_edges:
+                if (m == o).all():
+                    return True
+                elif (m == o[::-1]).all():
+                    return True
+        return False
 
 def get_empty_tile(array):
     for row in range(array.shape[0]):
@@ -97,9 +104,10 @@ def check_neighbours(array, rowcol):
 
 def find_solution(unplaced_tiles, array):
     rowcol = get_empty_tile(array)
+    # print(rowcol)
     if not rowcol:
         return True
-    row, col = get_empty_tile(array)
+    row, col = rowcol
     for tile in unplaced_tiles:
         array[row, col] = tile
         # No flips
@@ -137,7 +145,8 @@ def find_solution(unplaced_tiles, array):
 
         array[row, col] = 0
 
-    return (array != 0).all()
+    print("Backtrack", rowcol)
+    return False
 
 
 if __name__ == "__main__":
@@ -170,19 +179,33 @@ if __name__ == "__main__":
 
     dim = int(math.sqrt(len(tiles)))
 
-    unplaced_tiles = set(tiles)
-    array = np.zeros(shape=(dim, dim), dtype=object)
-    solution = find_solution(unplaced_tiles, array)
-
-    print(solution)
-
-    result = (array[0,0].tile_id * 
-                array[0,-1].tile_id * 
-                array[-1,0].tile_id *
-                array[-1,-1].tile_id)
+#   # Part 1
+    tile_matches_map = defaultdict(int)
+    for i, t1 in enumerate(tiles):
+        for j, t2 in enumerate(tiles[i:]):
+            result = t1.edge_matches_any_side(t2)
+            if result:
+                tile_matches_map[t1] += 1
+                tile_matches_map[t2] += 1
+    # print(tile_matches_map)
+    result = 1
+    for t, val in tile_matches_map.items():
+        if val == 4:
+            result *= t.tile_id
 
     print(result)
 
-    
-    # do fancy rotations to try to match stuff
+    # unplaced_tiles = set(tiles)
+    # array = np.zeros(shape=(dim, dim), dtype=object)
+    # solution = find_solution(unplaced_tiles, array)
 
+    # print(solution)
+
+    # result = (array[0,0].tile_id * 
+    #             array[0,-1].tile_id * 
+    #             array[-1,0].tile_id *
+    #             array[-1,-1].tile_id)
+
+    # print(result)
+
+    
