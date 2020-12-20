@@ -10,7 +10,7 @@ class Tile:
         self.tile_id = tile_id
         self.raw_data = []
         self.data = None
-        self.edge_matches = [0, 0, 0, 0]
+        self.edge_matches = [None, None, None, None]
 
     def __repr__(self):
         return f"Tile {self.tile_id}"
@@ -61,9 +61,13 @@ class Tile:
 
         for i, m in enumerate(m_edges):
             for j, o in enumerate(o_edges):
-                if (m == o).all() or (m == o[::-1]).all():
-                    self.edge_matches[i] += 1
-                    other.edge_matches[j] += 1
+                if (m == o).all():
+                    self.edge_matches[i] = self, i
+                    other.edge_matches[j] = other, j
+                    return True
+                if (m == o[::-1]).all():
+                    self.edge_matches[i] = self, i
+                    other.edge_matches[j] = other, -j
                     return True
         return False
 
