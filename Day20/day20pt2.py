@@ -193,15 +193,92 @@ def find_solution(unplaced_tiles, array, corner_tiles):
     print("Backtrack", rowcol)
     return False
 
-def find_solutions_with_corners(unplaced_tiles, array, corners):
-    corners = list(corners)
-    array[0,0] = corners[0]
-    array[0,-1] = corners[1]
-    array[-1,0] = corners[2]
-    array[-1,-1] = corners[3]
+def render_array(array):
+    array_dim = array.shape[0]
+    tile_dim = array[0,0].data.shape[0]
+    noborder_dim = tile_dim - 2
 
-    if not find_solution(unplaced_tiles, array):
-        pass
+    dim = array.shape[0] * noborder_dim
+    print("Pic dimensions:", dim)
+    pic = np.zeros((dim,dim), dtype=object)
+
+    for r in range(array_dim):
+        for c in range(array_dim):
+            r_idx, c_idx = noborder_dim * r, noborder_dim * c
+            tile_data = array[r, c].data
+            noborder = tile_data[1:-1, 1:-1]
+            pic[r_idx: r_idx + noborder_dim, c_idx: c_idx + noborder_dim] = noborder
+
+    return pic
+
+
+def find_seamonsters(pic, sm):
+    sm_r, sm_c = sm.shape
+    dim = pic.shape[0]
+
+    sm_care = (sm == '#')
+
+    found_start = []
+
+    for r in range(dim - sm_r):
+        for c in range(dim - sm_c):
+            pic_window = pic[r: r+sm_r, c:c+sm_c]
+            check_window = (pic_window == sm)
+            found = True
+            for sr in range(sm_r):
+                for sc in range(sm_c):
+                    if sm_care[sr, sc] and not check_window[sr, sc]:
+                        found = False
+                        break
+                if not found:
+                    break
+            if found:
+                found_start.append((r, c))
+
+    return found_start
+
+def find_seamonsters_with_transform(pic, sm):
+    for i in range(4):
+        sm_starts = find_seamonsters(pic, sm)
+        if sm_starts:
+            return pic, sm_starts
+        pic = np.rot90(pic)
+    # Flip x
+    pic = np.fliplr(pic)
+    for i in range(4):
+        sm_starts = find_seamonsters(pic, sm)
+        if sm_starts:
+            if sm_starts:
+                return pic, sm_starts
+        pic = np.rot90(pic)
+    # Flip x&y
+    pic = np.flipud(pic)
+    for i in range(4):
+        sm_starts = find_seamonsters(pic, sm)
+        if sm_starts:
+            return pic, sm_starts
+        pic = np.rot90(pic)
+    # Flip y
+    pic = np.fliplr(pic)
+    for i in range(4):
+        sm_starts = find_seamonsters(pic, sm)
+        if sm_starts:
+            return pic, sm_starts
+        pic = np.rot90(pic)
+    pic = np.flipud(pic)
+    return pic, None
+
+
+def censor_seamonsters(pic, sm):
+    pic, sm_starts = find_seamonsters_with_transform(pic, sm)
+    sm_r, sm_c = sm.shape
+    sm_care = (sm == '#')
+    for row, col in sm_starts:
+        pic_slice = pic[row: row + sm_r, col: col + sm_c]
+        for r in range(sm_r):
+            for c in range(sm_c):
+                if sm_care[r, c]:
+                    pic_slice[r][c] = '.'
 
 
 if __name__ == "__main__":
@@ -255,7 +332,30 @@ if __name__ == "__main__":
     # Part 2
     unplaced_tiles = set(tiles) - corner_tiles
     array = np.zeros(shape=(dim, dim), dtype=object)
-    # solution = find_solutions_with_corners(unplaced_tiles, array, corner_tiles)
-    solution = find_solution(unplaced_tiles, array, corner_tiles)
 
-    print(solution)    
+    # Not sure why running this in non-debug mode results in suboptimal perf...
+    solution_found = find_solution(unplaced_tiles, array, corner_tiles)
+
+    with open("seamonster.txt") as sm_file:
+        sm_raw = sm_file.read()
+
+    sm_l = [list(line) for line in sm_raw.split('\n') if line.strip()]
+
+    sm = np.array(sm_l)
+
+    pic = render_array(array)
+
+    # Debug: print out the full combined and transformed pic
+    # pic_t, sm_starts = find_seamonsters_with_transform(pic, sm)
+
+    # with open("full_pic.txt", 'w') as outfile:
+    #     for row in range(pic.shape[0]):
+    #         for col in range(pic.shape[0]):
+    #             outfile.write(pic_t[row, col])
+    #         outfile.write('\n')
+
+    censor_seamonsters(pic, sm)
+
+    answer = np.count_nonzero(pic == '#')
+    # 2743 is too high, but 2366 is correct
+    print("Part 2 Solution:", answer)
