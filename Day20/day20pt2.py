@@ -60,9 +60,10 @@ class Tile:
         o_edges = other.get_edges()
 
         for i, m in enumerate(m_edges):
-            for o in o_edges:
+            for j, o in enumerate(o_edges):
                 if (m == o).all() or (m == o[::-1]).all():
                     self.edge_matches[i] += 1
+                    other.edge_matches[j] += 1
                     return True
         return False
 
@@ -201,7 +202,7 @@ if __name__ == "__main__":
     result = 1
     corner_tiles = set()
     for t, val in tile_matches_map.items():
-        if val == 4:
+        if val == 2:
             corner_tiles.add(t)
             result *= t.tile_id
 
