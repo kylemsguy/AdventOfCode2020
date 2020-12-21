@@ -1,0 +1,14 @@
+"mxmxvkd" kfcds "sqjhc" nhms (contains dairy, fish)
+trh fvjkl "sbzzf" "mxmxvkd" (contains dairy)
+"sqjhc" fvjkl (contains soy)
+"sqjhc" "mxmxvkd" sbzzf (contains fish)
+
+answer:
+none of the ingredients kfcds, nhms, sbzzf, or trh can contain an allergen. 
+
+if the two sets contain the same allergens, any common items could contain the allergens
+if the two sets do not contain the same allergen, any common items should not contain the allergens
+
+Compare all foods that contain the same allergen
+All common ingredients in these foods may contain that allergen
+Add all of these to the probable allergens sets
