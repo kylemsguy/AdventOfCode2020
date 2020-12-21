@@ -11,7 +11,7 @@ class Food:
 
     def __repr__(self):
         ingr = ' '.join(self.ing)
-        allerg = ', '.join(self.allreg)
+        allerg = ', '.join(self.allerg)
         return f"{ingr} ({allerg})"
 
 
