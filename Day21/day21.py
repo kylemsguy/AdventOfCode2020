@@ -9,14 +9,11 @@ class Food:
         self.ing = set(ingredients)
         self.allerg = set(allergens)
 
+    def __repr__(self):
+        ingr = ' '.join(self.ing)
+        allerg = ', '.join(self.allreg)
+        return f"{ingr} ({allerg})"
 
-def update_probable_allergens(probable_allergens, food1, food2):
-    common_ingrs = food1.ing.intersection(food2.ing)
-    if food1.allerg.intersection(food2.allerg):
-        probable_allergens.update(common_ingrs)
-    else:
-        # What do we do here?
-        pass
 
 if __name__ == "__main__":
     # with open("input_small.txt") as infile:
@@ -38,13 +35,6 @@ if __name__ == "__main__":
         allergens.update(allergs)
         food = Food(ingrs, allergs)
         foods.append(food)
-
-    # could_allergens = set()
-    # for i in range(len(foods)-1):
-    #     for j in range(i+1, len(foods)):
-    #         food1, food2 = foods[i], foods[j]
-    #         update_probable_allergens(could_allergens, food1, food2)
-    #         # could_allergens.update(allergens)
 
     could_allergens = set()
     for a in allergens:
@@ -70,3 +60,41 @@ if __name__ == "__main__":
     answer = sum(list(ingr_occur_map.values()))
 
     print("Part 1 Solution:", answer)
+
+    for f in foods:
+        f.ing -= not_allergens
+
+    eng_candidate_map = {a: None for a in allergens}
+
+    for a in allergens:
+        ingr_sets = []
+        for f in foods:
+            if a in f.allerg:
+                ingr_sets.append(f.ing)
+        if len(ingr_sets) > 1:
+            intersection = ingr_sets[0].intersection(*ingr_sets[1:])
+        else:
+            intersection = ingr_sets[0]
+
+        eng_candidate_map[a] = intersection
+
+    eng_gib_map = {a: None for a in allergens}
+    not_processed = set(allergens)
+    while eng_candidate_map:
+        for a, gibs in eng_candidate_map.items():
+            if len(gibs) == 1:
+                break
+        eng_gib_map[a] = list(gibs)[0]
+        del eng_candidate_map[a]
+        for a in eng_candidate_map:
+            eng_candidate_map[a] -= gibs
+        
+    print(eng_gib_map)
+
+    gib_eng_map = {
+        gib: eng for eng, gib in eng_gib_map.items()
+    }
+    dang_list = list(eng_gib_map.values())
+    dang_list.sort(key=lambda x: gib_eng_map[x])
+
+    print("Part 2 solution:", ','.join(dang_list))
