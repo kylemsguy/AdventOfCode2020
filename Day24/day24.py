@@ -84,11 +84,15 @@ if __name__ == "__main__":
     for c in tile_board:
         b_up += tile_board[c]
 
-    for ref in tile_refs:
-        print(ref)
-    print(b_up)
+    # Sanity check parser
+    # for ref in tile_refs:
+    #     print(ref)
+    print("Part 1 Solution:", b_up)
 
     min_row, min_col, max_row, max_col = get_min_max(tile_board)
+
+    print("Part 2 Solution: ", end='')
+    sys.stdout.flush()
 
     # Part 2
     for i in range(100):
